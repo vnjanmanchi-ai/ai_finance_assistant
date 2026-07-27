@@ -1,0 +1,52 @@
+azure_openai:
+  # Set via env vars in .env — placeholders here for reference only
+  endpoint_env: "AZURE_OPENAI_ENDPOINT"
+  api_key_env: "AZURE_OPENAI_API_KEY"
+  api_version: "2024-10-21"
+  deployments:
+    chat_fast: "gpt-4o-mini"      # routine agents: Q&A, News, Tax
+    chat_reasoning: "gpt-4o"       # Portfolio Analysis, Goal Planning
+    embedding: "text-embedding-3-small"
+
+azure_ai_search:
+  endpoint_env: "AZURE_SEARCH_ENDPOINT"
+  api_key_env: "AZURE_SEARCH_API_KEY"
+  index_name: "finance-kb-index"
+  vector_field: "content_vector"
+  top_k: 4
+
+market_data:
+  primary_provider: "yfinance"
+  fallback_provider: "alpha_vantage"
+  alpha_vantage_api_key_env: "ALPHA_VANTAGE_API_KEY"
+  cache_ttl_minutes: 30
+
+agents:
+  # Which LLM deployment each agent uses, and which KB categories it can retrieve from
+  finance_qa:
+    model: chat_fast
+    kb_categories: ["stocks_bonds_etfs", "diversification_risk", "compound_interest_goals", "tax_advantaged_accounts"]
+  portfolio_analysis:
+    model: chat_reasoning
+    kb_categories: ["diversification_risk", "stocks_bonds_etfs"]
+  market_analysis:
+    model: chat_fast
+    kb_categories: []
+  goal_planning:
+    model: chat_reasoning
+    kb_categories: ["compound_interest_goals", "diversification_risk"]
+  news_synthesizer:
+    model: chat_fast
+    kb_categories: []
+  tax_education:
+    model: chat_fast
+    kb_categories: ["tax_advantaged_accounts"]
+
+governance:
+  disclaimer_required_agents: ["finance_qa", "portfolio_analysis", "goal_planning", "tax_education"]
+  content_safety_enabled: true
+  audit_log_path: "logs/audit.jsonl"
+
+app:
+  session_ttl_minutes: 60
+  log_level: "INFO"

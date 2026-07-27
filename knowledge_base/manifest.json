@@ -1,0 +1,81 @@
+{
+  "knowledge_base_version": "1.0",
+  "last_updated": "2026-07-22",
+  "chunking_recommendation": {
+    "chunk_size_tokens": 600,
+    "overlap_percent": 15,
+    "strategy": "split by ## section headers, keep front-matter as chunk metadata"
+  },
+  "articles": [
+    {
+      "id": "kb-001",
+      "file": "01_what_is_a_stock.md",
+      "title": "What Is a Stock?",
+      "category": "stocks_bonds_etfs",
+      "agent_scope": ["finance_qa"]
+    },
+    {
+      "id": "kb-002",
+      "file": "02_what_is_a_bond.md",
+      "title": "What Is a Bond?",
+      "category": "stocks_bonds_etfs",
+      "agent_scope": ["finance_qa"]
+    },
+    {
+      "id": "kb-003",
+      "file": "03_what_is_an_etf.md",
+      "title": "What Is an ETF (Exchange-Traded Fund)?",
+      "category": "stocks_bonds_etfs",
+      "agent_scope": ["finance_qa", "portfolio_analysis"]
+    },
+    {
+      "id": "kb-004",
+      "file": "04_understanding_diversification.md",
+      "title": "Understanding Diversification",
+      "category": "diversification_risk",
+      "agent_scope": ["finance_qa", "portfolio_analysis"]
+    },
+    {
+      "id": "kb-005",
+      "file": "05_risk_tolerance_explained.md",
+      "title": "Risk Tolerance Explained",
+      "category": "diversification_risk",
+      "agent_scope": ["finance_qa", "portfolio_analysis", "goal_planning"]
+    },
+    {
+      "id": "kb-006",
+      "file": "06_how_compound_interest_works.md",
+      "title": "How Compound Interest Works",
+      "category": "compound_interest_goals",
+      "agent_scope": ["finance_qa", "goal_planning"]
+    },
+    {
+      "id": "kb-007",
+      "file": "07_setting_smart_financial_goals.md",
+      "title": "Setting SMART Financial Goals",
+      "category": "compound_interest_goals",
+      "agent_scope": ["finance_qa", "goal_planning"]
+    },
+    {
+      "id": "kb-008",
+      "file": "08_dollar_cost_averaging.md",
+      "title": "Dollar-Cost Averaging Explained",
+      "category": "compound_interest_goals",
+      "agent_scope": ["finance_qa", "goal_planning"]
+    },
+    {
+      "id": "kb-009",
+      "file": "09_401k_basics.md",
+      "title": "401(k) Basics",
+      "category": "tax_advantaged_accounts",
+      "agent_scope": ["finance_qa", "tax_education"]
+    },
+    {
+      "id": "kb-010",
+      "file": "10_ira_basics_traditional_vs_roth.md",
+      "title": "IRA Basics: Traditional vs. Roth",
+      "category": "tax_advantaged_accounts",
+      "agent_scope": ["finance_qa", "tax_education"]
+    }
+  ]
+}
