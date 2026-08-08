@@ -9,7 +9,7 @@ If the RAG flow feels unclear, read `docs/concepts/` in order (00 → 06) before
 ## What's implemented so far
 
 - **Phase 1 (foundations)**: `config.yaml` driven configuration, Azure OpenAI + Azure AI Search client factories (`src/core/azure_clients.py`), the LangGraph `AgentState` schema (`src/workflow/state.py`), and a `BaseAgent` class that every agent inherits from.
-- **Phase 2 (RAG)**: 10 knowledge base articles (`knowledge_base/`), a section-aware chunker, an Azure OpenAI embedder, an Azure AI Search index schema + upload/retrieve client, and a one-shot ingestion script.
+- **Phase 2 (RAG)**: 7 knowledge base articles (`knowledge_base/`, expanding toward the 50-100 target), a section-aware chunker, an Azure OpenAI embedder, an Azure AI Search index schema + upload/retrieve client, and a one-shot ingestion script.
 - **Phase 3.5 (governance & security)**: built directly into `BaseAgent` — every agent call gets disclaimer injection, audit logging, and prompt-injection-resistant context wrapping for free. See `src/core/governance.py` and `src/core/security.py`.
 - **First concrete agent**: `src/agents/finance_qa_agent.py` — the reference implementation the other 5 agents should follow.
 
@@ -25,8 +25,11 @@ cp .env.example .env
 ```
 
 You'll need, at minimum:
-- An Azure OpenAI resource with `gpt-4o-mini`, `gpt-4o`, and `text-embedding-3-small` deployed
-- An Azure AI Search resource (Free tier is enough for these 10 articles)
+- An Azure OpenAI resource with `gpt-5-mini` and `text-embedding-3-small` deployed
+  (both `chat_fast` and `chat_reasoning` in `config.yaml` currently point to the same
+  `gpt-5-mini` deployment, since `gpt-4o-mini`/`gpt-4o` are deprecated on Azure — swap
+  `chat_reasoning` to a stronger model later if one is deployed)
+- An Azure AI Search resource (Free tier is enough for our current article count)
 
 ## Ingest the knowledge base into Azure AI Search
 
@@ -58,7 +61,7 @@ src/
 ├── rag/          # chunking, embedding, Azure AI Search index + retrieval
 ├── agents/       # BaseAgent + one file per agent
 └── workflow/     # LangGraph state schema (orchestration comes in Phase 5)
-knowledge_base/   # 10 curated articles + manifest.json
+knowledge_base/   # curated articles, expanding toward 50-100
 tests/            # pytest suite
 ```
 
