@@ -46,7 +46,11 @@ def get_search_client() -> SearchClient:
 
 
 def chat_deployment_name(which: str = "chat_fast") -> str:
-    """which: 'chat_fast' (gpt-4o-mini) or 'chat_reasoning' (gpt-4o)."""
+    """which: 'chat_fast' or 'chat_reasoning' — both currently point to the
+    gpt-5-mini deployment (see config.yaml). gpt-4o-mini/gpt-4o are deprecated
+    on Azure and are not used here; swap chat_reasoning to a stronger model
+    in config.yaml once one is deployed, with zero code changes needed.
+    """
     return get_config()["azure_openai"]["deployments"][which]
 
 
