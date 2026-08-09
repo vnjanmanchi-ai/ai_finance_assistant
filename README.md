@@ -42,7 +42,8 @@ User (React UI)
 
 ## Architecture
 
-![Architecture Diagram](docs/architecture.svg)
+<img width="523" height="491" alt="image" src="https://github.com/user-attachments/assets/8e1ec688-c1e9-4c02-bace-1a82b2d8e72e" />
+
 
 ### Groundedness gate
 
