@@ -1,13 +1,14 @@
-# 💰 AI Finance Assistant — Multi-Agent Financial Education System
+# 💰 AI Finance Assistant — Multi-Agent RAG System for Financial Education
 
-A production-grade multi-agent AI financial education assistant for a retail banking app, built with **LangGraph**, **Azure OpenAI (gpt-5-mini)**, **Azure AI Search**, **FastAPI**, and **React**. Six specialized agents handle general education, portfolio analysis, live market data, savings projections, news, and tax education — with strict "education, not advice" guardrails, groundedness verification, PII redaction, and checkpointed, resumable orchestration.
+A production-grade multi-agent AI financial education assistant for a retail banking app, built with **Retrieval-Augmented Generation (RAG)**, **LangGraph**, **Azure OpenAI (gpt-5-mini)**, **Azure AI Search**, **FastAPI**, and **React**. Six specialized agents — three of them RAG-grounded — handle general education, portfolio analysis, live market data, savings projections, news, and tax education, backed by a curated knowledge base with an empirically-calibrated groundedness gate that detects and declines out-of-scope questions rather than answering from the model's own unverified training knowledge. Built with strict "education, not advice" guardrails, PII redaction, and checkpointed, resumable orchestration.
 
 ---
 
 ## Key Features
 
+- **Retrieval-Augmented Generation (RAG)** — three agents grounded in a curated 10-article knowledge base via Azure AI Search vector retrieval, with source citations on every grounded answer
+- **Empirically-calibrated groundedness gate** — discovered a real false-citation bug in production use, root-caused it to Azure AI Search's hybrid RRF fusion score being unusable as a relevance signal, switched to vector-only cosine similarity, and calibrated a real threshold from actual good/bad query data
 - Multi-agent orchestration using LangGraph, with single- and multi-agent (parallel fan-out) routing
-- Retrieval-Augmented Generation grounded in a curated knowledge base — with an empirically-calibrated relevance gate to prevent hallucinated, falsely-cited answers
 - Live market data (yfinance primary, Alpha Vantage fallback) with in-memory TTL caching
 - Deterministic financial math (portfolio allocation, diversification scoring, compound-interest projections) — the LLM explains numbers, never invents them
 - Checkpointed conversation state with genuine resume-on-failure (not just restart)
@@ -40,10 +41,34 @@ User (React UI)
 
 ---
 
+## RAG Pipeline
+
+Three of the six agents (Finance Q&A, Tax Education, and optionally Portfolio Analysis/Goal Planning) are grounded via Retrieval-Augmented Generation, not the model's own training knowledge:
+
+```
+knowledge_base/*.md  (10 curated articles, YAML front-matter: id, title, category, tags)
+        ↓  chunker.py    — header-based chunking (splits on ## sections)
+        ↓  embedder.py   — Azure OpenAI text-embedding-3-small, batched
+        ↓  search_index.py — Azure AI Search, vector-only index
+        ↓
+   retrieve(query, category)  — filtered to the calling agent's allowed categories
+        ↓
+   relevance gate (score ≥ 0.58, empirically calibrated)
+        ↓
+   ┌─── PASS ───────────────┐        ┌─── FAIL ───────────────────┐
+   │ context injected,      │        │ explicitly told to decline, │
+   │ citations attached     │        │ NOT answer from training    │
+   └─────────────────────────┘        │ knowledge                   │
+                                       └──────────────────────────────┘
+```
+
+**Why this matters, and how it was verified:** a live test asking an out-of-scope question ("What is India's GDP growth rate?") initially produced a fluent, confident answer from the model's own training data — with citations falsely attached to unrelated knowledge-base articles. Root-caused to Azure AI Search's hybrid search using Reciprocal Rank Fusion, which scores by rank position, not semantic distance, and is therefore unusable as a cross-query relevance signal. Fixed by switching to vector-only cosine similarity and empirically calibrating a threshold (`0.58`) from real good-query vs. bad-query score distributions — then verified in both directions before considering it resolved. Full write-up in `docs/` and the project's test log.
+
+---
+
 ## Architecture
 
-<img width="800" height="721" alt="image" src="https://github.com/user-attachments/assets/8e1ec688-c1e9-4c02-bace-1a82b2d8e72e" />
-
+![Architecture Diagram](docs/architecture.svg)
 
 ### Groundedness gate
 
