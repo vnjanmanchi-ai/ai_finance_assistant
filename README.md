@@ -68,7 +68,8 @@ knowledge_base/*.md  (10 curated articles, YAML front-matter: id, title, categor
 
 ## Architecture
 
-![Architecture Diagram](docs/architecture.svg)
+<img width="823" height="791" alt="image" src="https://github.com/user-attachments/assets/29c6af94-59f4-43a0-b6d8-a35236241b2c" />
+
 
 ### Groundedness gate
 
